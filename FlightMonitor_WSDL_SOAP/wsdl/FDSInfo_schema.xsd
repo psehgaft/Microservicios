@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/FDSInfo_schema/"
+	targetNamespace="http://www.example.org/FDSInfo_schema/">
+
+	<!-- Simple Types Declaration -->
+	<!-- ************************ -->
+	
+	<simpleType name="stringType">
+	  <restriction base="string" />
+	</simpleType>
+	
+	<simpleType name="modelType">
+	  <restriction base="string">
+	  	<pattern value="[A-Z][0-9][0-9][0-9]" />
+	  </restriction>
+	</simpleType>
+	
+	<simpleType name="seatType">
+	  <restriction base="string">
+	  	<pattern value="[0-9][0-9][A-Z]" />
+	  </restriction>
+	</simpleType>
+	
+	<simpleType name="flightNumberType">
+	  <restriction base="string">
+	  	<pattern value="[A-Z][A-Z][0-9][0-9][0-9]" />
+	  </restriction>
+	</simpleType>
+	
+	<simpleType name="hourType">
+	  <restriction base="integer">
+	    <minInclusive value="0" />
+	    <maxInclusive value="23" />
+	  </restriction>
+	</simpleType>
+	
+	<simpleType name="minuteType">
+	  <restriction base="integer">
+	    <minInclusive value="0" />
+	    <maxInclusive value="59" />
+	  </restriction>
+	</simpleType>
+	
+	<simpleType name="delayType">
+	  <restriction base="integer"/>
+	</simpleType>
+	
+	<simpleType name="statusType">
+    	<restriction base="string">
+    	  <enumeration value="ARRIVED"/>
+    	  <enumeration value="BOARDING"/>
+          <enumeration value="BOOKING"/>
+          <enumeration value="CANCELLED"/>
+    	  <enumeration value="CHECKINGIN"/>
+          <enumeration value="DEPARTED"/>
+   		</restriction>
+  	</simpleType>
+	
+	
+	  
+	<!-- Aircraft -->	
+	<!-- ******** -->
+
+	<complexType name="seatsType">
+	  <sequence>
+	    <element name="seat" maxOccurs="unbounded" type="tns:seatType" />
+	  </sequence>
+	</complexType>
+	
+	<complexType name="aircraftType">
+	  <sequence>
+	    <element name="model" type="tns:modelType"/>
+	    <element name="seats" type="tns:seatsType"/>
+	  </sequence>
+	</complexType>
+	
+	<complexType name="AircraftsType">
+	  <sequence>
+	    <element name="aircraft" maxOccurs="unbounded" type="tns:aircraftType" />
+	  </sequence>
+	</complexType>
+	
+	
+	<!-- Flights -->
+	<!-- ******* -->	
+
+	<complexType name="timeType">
+	  <sequence>
+	    <element name="hour" type="tns:hourType" />
+	    <element name="minute" type="tns:minuteType" />
+	  </sequence>
+	</complexType>
+	
+	<complexType name="flightReaderType">
+	  <sequence>
+	    <element name="flightNumber" type="tns:flightNumberType" />
+	    <element name="departure" type="tns:stringType" />
+	    <element name="time" type="tns:timeType" />
+	    <element name="destination" type="tns:stringType" />
+	  </sequence>
+	</complexType>
+	
+	<complexType name="FlightsType">
+	  <sequence>
+	    <element name="flightReader" maxOccurs="unbounded" type="tns:flightReaderType" />
+	  </sequence>
+	</complexType>
+	
+	
+	<!-- FlightInstances -->
+	<!-- *************** -->
+	
+	<complexType name="passengerReaderType">
+	  <sequence>
+	    <element name="name" type="tns:stringType" />
+	    <element name="seatID" type="tns:seatType" />
+	    <element name="boarded" type="boolean" />
+	  </sequence>
+	</complexType>
+	
+	<complexType name="PassengersType">
+	  <sequence>
+	    <element name="passengerReader" maxOccurs="unbounded" type="tns:passengerReaderType" />
+	  </sequence>
+	</complexType>
+	
+	<complexType name="flightInstanceReaderType">
+	  <sequence>
+	    <element name="flightID" type="tns:flightNumberType" />
+	    <element name="aircraftID" type="tns:modelType" />
+	    <element name="date" type="date" />
+	    <element name="delay" type="tns:delayType" />
+	    <element name="departureGate" type="tns:stringType" />
+	    <element name="status" type="tns:statusType" />
+	    <element name="Passengers" type="tns:PassengersType" />
+	  </sequence>
+	</complexType>
+	
+	<complexType name="FlightInstancesType">
+	  <sequence>
+	    <element name="flightInstanceReader" maxOccurs="unbounded" type="tns:flightInstanceReaderType" />
+	  </sequence>
+	</complexType>
+	
+	
+	<!-- FlightMonitor -->
+	<!-- *************** -->
+	
+	<complexType name="FlightMonitorType">
+	  <sequence>
+	    <element name="Aircrafts" type="tns:AircraftsType" />
+	    <element name="Flights" type="tns:FlightsType" />
+	    <element name="FlightInstances" type="tns:FlightInstancesType" />
+	  </sequence>
+	</complexType>
+	
+	
+	<!-- Root -->
+	<!-- **** -->
+	
+	<element name="FlightMonitor" type="tns:FlightMonitorType" />
+		
+</schema>

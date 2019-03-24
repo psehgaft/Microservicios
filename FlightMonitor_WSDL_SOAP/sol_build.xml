@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+
+	<project name="Assignement4_sol_build"  basedir=".">
+		
+	<property name="debug" value="true" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.7" />
+	<property name="source" value="1.7" />
+
+		<property name="Assignement4.location" location="."/>
+			
+		<!-- Directory -->
+		<property name="libdir" value="${Assignement4.location}/lib" />
+		<property name="wsdldir" location="${Assignement4.location}/wsdl"/>
+		<property name="wsdldirclient" location="${Assignement4.location}/xsd"/>
+		<property name="builddir" location="${Assignement4.location}/build" />
+		<property name="metadir" location="${builddir}/META-INF" />
+		<property name="gen-srcdir" location="${Assignement4.location}/gen-src"/>
+		<property name="srcdir" location="${Assignement4.location}/src" />
+		<property name="episodedir" location="${Assignement4.location}/episode" />
+		
+		<!-- Files  -->
+		<property name="wsdlInfo" value="${wsdldir}/FDSInfo.wsdl" />
+		<property name="wsdlControl" value="${wsdldir}/FDSControl.wsdl" />	
+		<property name="wsdlXsd" value="${wsdldir}/FDSInfo_schema.xsd" />	
+		<property name="wsdlBoarding" value="${wsdldirclient}/fdsBoarding.xsd" />
+		<property name="wsdlList" value="${wsdldirclient}/boardList.xsd" />
+		<property name="episode" location="${episodedir}/xsdepisode" />
+		<property name="episodeBoarding" location="${episodedir}/xsdBoardingepisode" />
+		<property name="episodeList" location="${episodedir}/xsdListepisode" />
+			
+		<!-- Packages -->
+		<property name="InfoPkg" value="it.polito.dp2.FDS.sol4.service.Info" />
+		<property name="ControlPkg" value="it.polito.dp2.FDS.sol4.service.Control" />
+		<property name="XsdPkg" value="it.polito.dp2.FDS.sol4.service.xsdpack" />
+		<property name="XsdClntBrdingPkg" value="it.polito.dp2.FDS.sol4.client.xsdBoarding" />	
+		<property name="XsdClntListPkg" value="it.polito.dp2.FDS.sol4.client.xsdList" />	
+
+		
+		<target name="init"  unless="${Idone}">
+			<echo message="init."> </echo>
+			<mkdir dir="${builddir}" />
+			<mkdir dir="${metadir}" />
+			<mkdir dir="${builddir}"/>
+			<mkdir dir="${gen-srcdir}"/>
+			<mkdir dir="${episodedir}"/>
+			
+		</target>
+			<!-- define the execution classpath for jaxws server -->
+				   <path id="server.classpath">
+					    <pathelement location="${builddir}" />
+				   		<pathelement location="${gen-srcdir}" />
+				   		<pathelement location="${libdir}/FDS.jar" />
+				   		<pathelement location="${libdir}/FDSRandom.jar" />
+						<pathelement location="${libdir}/lab4.jar" />
+				   </path>
+				   	
+		<target name="clean" >
+				<echo message="clean">
+				 			</echo>	
+			<delete dir="${builddir}">
+						</delete>
+			<delete dir="${gen-srcdir}">
+						</delete>
+		</target>
+		
+		
+		
+		<!-- Target set-META-INF -->
+		<target name="set-meta" depends="init,chk-bindings">
+			
+			<mkdir dir="${metadir}"/>
+			<copy toDir="${metadir}" file="${wsdlControl}" overwrite="true"/>
+			<copy toDir="${metadir}" file="${wsdlInfo}" overwrite="true"/>
+			<copy toDir="${metadir}" file="${wsdlXsd}" overwrite="true" />
+			<copy toDir="${metadir}" file="${wsdlBoarding}" overwrite="true" />
+			<copy toDir="${metadir}" file="${wsdlList}" overwrite="true" />
+		</target>
+		
+		<!-- Target chk-bindings -->
+		<target name="chk-bindings">		
+								
+			<uptodate property="generate-control.notRequired" targetfile="${metadir}/.controlflagfile">
+						<srcfiles dir="${wsdldir}" includes="/**/FDSControl.wsdl" />
+					</uptodate>
+					<uptodate property="generate-info.notRequired" targetfile="${metadir}/.infoflagfile">
+						<srcfiles dir="${wsdldir}" includes="/**/FDSInfo.wsdl" />
+					</uptodate>
+					
+			<echo message="${generate-control.notRequired}"></echo>
+			<echo message="${generate-info.notRequired}"></echo>
+
+		</target>
+		
+		<target name="chk-bindingsXsd" depends="init">
+					<uptodate property="generate-bindings.notRequired" targetfile="${metadir}/.flagfile">
+						<srcfiles dir="${wsdldir}" includes="**/*.xsd" />
+					</uptodate>
+		<echo message="${generate-bindings.notRequired}"></echo>
+		</target>
+		<target name="chk-bindingsXsdBoarding" depends="init">
+										<uptodate property="generate-boarding-bindings.notRequired" targetfile="${metadir}/.boardingflagfile">
+											<srcfiles dir="${wsdldirclient}" includes="**/fdsBoarding.xsd" />
+										</uptodate>
+							<echo message="${generate-boarding-bindings.notRequired}"></echo>
+		</target>
+		
+		<target name="chk-bindingsXsdList" depends="init">
+										<uptodate property="generate-listing-bindings.notRequired" targetfile="${metadir}/.listflagfile">
+											<srcfiles dir="${wsdldirclient}" includes="**/boardList.xsd" />
+										</uptodate>
+							<echo message="${generate-listing-bindings.notRequired}"></echo>
+		</target>
+		
+		<target name="generate_xsd" unless="generate-bindings.notRequired" depends="init,set-meta,chk-bindingsXsd">
+					<!-- Xsd artifact -->
+					<exec executable="xjc">
+						 <arg line="-d ${gen-srcdir}  -p ${XsdPkg} ${metadir}/FDSInfo_schema.xsd  -episode ${episode} "/>
+					</exec>
+			<touch file="${metadir}/.flagfile"/>
+			</target>
+			
+		<target name="generate_xsd_client_boarding" unless="generate-boarding-bindings.notRequired" depends="init,set-meta,chk-bindingsXsdBoarding">
+					<!-- Xsd artifact -->
+					<exec executable="xjc">
+						 <arg line="-d ${gen-srcdir}  -p ${XsdClntBrdingPkg} ${metadir}/fdsBoarding.xsd -episode ${episodeBoarding} "/>
+					</exec>
+			<touch file="${metadir}/.boardingflagfile"/>
+			</target>
+		
+		<target name="generate_xsd_client_list" unless="generate-listing-bindings.notRequired" depends="init,set-meta,chk-bindingsXsdList">
+					<!-- Xsd artifact -->
+					<exec executable="xjc">
+						 <arg line="-d ${gen-srcdir}  -p ${XsdClntListPkg} ${metadir}/boardList.xsd  -episode ${episodeList} "/>
+					</exec>
+			<touch file="${metadir}/.listflagfile"/>
+			</target>
+		
+		<target name="generate_control" unless="generate-control.notRequired" depends="init,chk-bindings,generate_xsd">
+				<exec executable="wsimport" failonerror="true">					
+					<arg line=" -keep  -s ${gen-srcdir} -p ${ControlPkg} ${wsdlControl} -b ${episode} -Xnocompile" />
+				</exec>
+			<touch file="${metadir}/.controlflagfile" />
+		</target>
+		
+		
+		<target name="generate_info" unless="generate-info.notRequired" depends="init,set-meta,generate_xsd">
+				<!-- Wsdl class generation-->
+				<exec executable="wsimport" failonerror="true">	
+					<arg line="-keep  -s ${gen-srcdir} -p ${InfoPkg} ${wsdlInfo} -b ${episode} -Xnocompile" />
+				</exec>
+			<touch file="${metadir}/.infoflagfile"/>
+		</target>
+		
+		<target name="generate-files" depends="generate_xsd, generate_xsd_client_list, generate_xsd_client_boarding ,generate_info,generate_control">
+			
+		</target>	
+		
+		<!-- Target build -->
+			<target name="build-server" depends="generate-files" >
+				<javac destdir="${builddir}" debug="${debug}" debuglevel="${debuglevel}" source="${source}" target="${target}" includeantruntime="false">
+					<src path="${srcdir}" />
+					<src path="${gen-srcdir}" />
+					<include name="it/polito/dp2/FDS/sol4/service/**/*.java"/>	
+					<include name="it/polito/dp2/FDS/sol4/server/**/*.java"/>			
+					<classpath>
+						<path refid="server.classpath"/>
+					</classpath>
+				</javac>
+			</target>
+	
+		
+		
+		<!-- Target build-client -->
+		<target name="build-client" depends="generate-files">
+			<javac destdir="${builddir}" debug="${debug}" debuglevel="${debuglevel}" source="${source}" target="${target}" includeantruntime="false">
+				<src path="${srcdir}" />
+				<src path="${gen-srcdir}" />
+				<include name="it/polito/dp2/FDS/sol4/client/*.java"/>
+				<include name="it/polito/dp2/FDS/sol4/client/xsdBoarding/*java" />
+				<include name="it/polito/dp2/FDS/sol4/client/xsdList/*java" />
+				<include name="it/polito/dp2/FDS/sol4/service/**/*.java"/>	
+				<classpath>
+					<path refid="server.classpath"/>
+				</classpath>
+			</javac>
+		</target>
+	</project>
+		

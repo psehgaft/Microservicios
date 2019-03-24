@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:tns="http://www.example.org/FDSInfo/" 
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+name="FDSInfo" 
+targetNamespace="http://www.example.org/FDSInfo/">
+
+<wsdl:documentation>
+ Author: Ivano Alvino s198651
+ Exam: DP2 Assignment 4a
+</wsdl:documentation>
+
+<!-- Types declaration -->
+<!-- ***************** -->
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.example.org/FDSInfo/"
+    			xmlns:tns1="http://www.example.org/FDSInfo_schema/">
+      
+      <xsd:import namespace="http://www.example.org/FDSInfo_schema/"
+				schemaLocation="FDSInfo_schema.xsd" />
+      
+      <!-- Aircrafts -->
+      <xsd:element name="getAircrafts" type="tns:getAircraftsRequestType"/>
+      <xsd:complexType name="getAircraftsRequestType">
+      	<xsd:sequence>
+           <xsd:element name="model" type="tns1:modelType" maxOccurs="1" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getAircraftsResponse" type="tns:getAircraftsResponseType"/>
+      <xsd:complexType name="gerAircraftsFaultType">
+         <xsd:sequence>
+           <xsd:element name="AircraftsError" type="xsd:string"/>
+         </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="getAircraftsResponseType">
+         <xsd:sequence>
+         	<xsd:element name="Aircrafts" type="tns1:aircraftType" maxOccurs="unbounded" minOccurs="0"/>
+         </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getAircraftsFault" type="tns:gerAircraftsFaultType"/>
+      
+      <!-- Flights -->
+      <xsd:element name="getFlights" type="tns:getFlightsRequestType"/>
+      <xsd:complexType name="getFlightsRequestType">
+         <xsd:sequence>
+            <xsd:element name="Departure" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+            <xsd:element name="Destination" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+            <xsd:element name="Time" type="tns1:timeType" maxOccurs="1" minOccurs="0"/>
+         </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getFlightsResponse" type="tns:getFlightsResponseType"/>
+      <xsd:complexType name="getFlightsResponseType">
+          <xsd:sequence>
+            <xsd:element name="Flights" type="tns1:flightReaderType" maxOccurs="unbounded" minOccurs="0"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getFlightsFault" type="tns:getFlightsFaultType"/>
+      <xsd:complexType name="getFlightsFaultType">
+          <xsd:sequence>
+            <xsd:element name="FlightsError" type="xsd:string"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetFlightsParamErr" type="tns:GetFlightsParamErrType"/>
+      <xsd:complexType name="GetFlightsParamErrType">
+          <xsd:sequence>
+          	<xsd:element name="errorMessage" type="xsd:string"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      
+      <!-- Instances -->
+      <xsd:element name="getInstances" type="tns:getInstancesRequestType"/>
+      <xsd:complexType name="getInstancesRequestType">
+          <xsd:sequence>
+          	<xsd:element name="flightNumber" type="tns1:flightNumberType" maxOccurs="1" minOccurs="0"/>
+		  	<xsd:element name="date" type="xsd:date" maxOccurs="1" minOccurs="0"/>
+          	<xsd:element name="status" type="tns1:statusType" maxOccurs="1" minOccurs="0"/>
+      	  </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getInstancesResponse" type="tns:getInstancesResponseType"/>
+      <xsd:complexType name="getInstancesResponseType">
+          <xsd:sequence>
+          	<xsd:element name="FlightInstances" type="tns1:flightInstanceReaderType" maxOccurs="unbounded" minOccurs="0"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getInstancesFault" type="tns:getInstancesFaultType"/>
+      <xsd:complexType name="getInstancesFaultType">
+          <xsd:sequence>
+           	<xsd:element name="InstancesError" type="xsd:string"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      
+      <!-- Passengers -->
+      <xsd:element name="getPassengers" type="tns:getPassengersType"/>
+      <xsd:complexType name="getPassengersType">
+		<xsd:sequence>
+			<xsd:element name="date" type="xsd:date" maxOccurs="1" minOccurs="0"/>
+			<xsd:element name="flightNumber" type="tns1:flightNumberType" maxOccurs="1" minOccurs="0"/>
+		</xsd:sequence>
+	  </xsd:complexType>
+      <xsd:element name="getPassengersResponse" type="tns:getPassengersResponseType"/>
+      <xsd:complexType name="getPassengersResponseType">
+		<xsd:sequence>
+			<xsd:element name="Passengers" type="tns1:passengerReaderType" maxOccurs="unbounded" minOccurs="0"/>
+		</xsd:sequence>
+	  </xsd:complexType>
+	  <xsd:element name="getPassengersFault" type="tns:getPassengersFaultType"/>
+	  <xsd:complexType name="getPassengersFaultType">
+        <xsd:sequence>
+            <xsd:element name="PassengersFault" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      
+      <!-- Single Passenger -->
+      <xsd:element name="getPassenger" type="tns:getPassengerRequestType"/>
+      <xsd:complexType name="getPassengerRequestType">
+		<xsd:sequence>
+			<xsd:element name="date" type="xsd:date" maxOccurs="1" minOccurs="1"/>
+			<xsd:element name="flightNumber" type="tns1:flightNumberType" maxOccurs="1" minOccurs="1"/>
+			<xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+		</xsd:sequence>
+	  </xsd:complexType>
+      <xsd:element name="getPassengerResponse" type="tns:getPassengerResponseType"/>
+      <xsd:complexType name="getPassengerResponseType">
+		<xsd:sequence>
+			<xsd:element name="Passenger" type="tns1:passengerReaderType" maxOccurs="1" minOccurs="0"/>
+		</xsd:sequence>
+	  </xsd:complexType>
+	  <xsd:element name="getPassengerFault" type="tns:getPassengerFaultType"/>
+	  <xsd:complexType name="getPassengerFaultType">
+        <xsd:sequence>
+            <xsd:element name="PassengerFault" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+            	
+      <!-- Single Flight -->
+      <xsd:element name="getFlight" type="tns:getFlightRequestType"/>
+      <xsd:complexType name="getFlightRequestType">
+         <xsd:sequence>
+            <xsd:element name="flightNumber" type="tns1:flightNumberType" maxOccurs="1" minOccurs="1"/>
+         </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getFlightResponse" type="tns:getFlightResponseType"/>
+      <xsd:complexType name="getFlightResponseType">
+          <xsd:sequence>
+            <xsd:element name="Flight" type="tns1:flightReaderType"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getFlightFault" type="tns:getFlightFaultType"/>
+      <xsd:complexType name="getFlightFaultType">
+          <xsd:sequence>
+            <xsd:element name="FlightError" type="xsd:string"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      
+      <!-- Single Instance -->
+      <xsd:element name="getInstance" type="tns:getInstanceRequestType"/>
+      <xsd:complexType name="getInstanceRequestType">
+          <xsd:sequence>
+          	<xsd:element name="flightNumber" type="tns1:flightNumberType" maxOccurs="1" minOccurs="1"/>
+		  	<xsd:element name="date" type="xsd:date" maxOccurs="1" minOccurs="1"/>
+      	  </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getInstanceResponse" type="tns:getInstanceResponseType"/>
+      <xsd:complexType name="getInstanceResponseType">
+          <xsd:sequence>
+          	<xsd:element name="FlightInstance" type="tns1:flightInstanceReaderType"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getInstanceFault" type="tns:getInstanceFaultType"/>
+      <xsd:complexType name="getInstanceFaultType">
+          <xsd:sequence>
+           	<xsd:element name="InstancesError" type="xsd:string"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      
+      <!-- get All informations -->
+      <xsd:element name="getAll" type="tns:getAllRequestType"/>
+      <xsd:complexType name="getAllRequestType"/>
+      <xsd:element name="getAllResponse" type="tns:getAllResponseType"/>
+      <xsd:complexType name="getAllResponseType">
+          <xsd:sequence>
+          	<xsd:element name="FlightMonitor" type="tns1:FlightMonitorType"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getAllFault" type="tns:getAllFaultType"/>
+      <xsd:complexType name="getAllFaultType">
+          <xsd:sequence>
+           	<xsd:element name="AllError" type="xsd:string"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      
+    </xsd:schema>
+  </wsdl:types>
+  
+  <!-- Messages declaration -->
+  <!-- ******************** -->
+  
+  <!-- get aircraft messages -->
+  <wsdl:message name="getAircraftsRequest">
+    <wsdl:part element="tns:getAircrafts" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getAircraftsResponse">
+    <wsdl:part element="tns:getAircraftsResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getAircraftsFault">
+    <wsdl:part element="tns:getAircraftsFault" name="fault"/>
+  </wsdl:message>
+  
+  <!-- get flights messages -->
+  <wsdl:message name="getFlightsRequest">
+    <wsdl:part element="tns:getFlights" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getFlightsResponse">
+    <wsdl:part element="tns:getFlightsResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getFlightsFault">
+    <wsdl:part element="tns:getFlightsFault" name="fault"/>
+  </wsdl:message>
+  <wsdl:message name="GetFlightsParamErr">
+    <wsdl:part element="tns:GetFlightsParamErr" name="errors"/>
+  </wsdl:message>
+  
+  <!-- get instances messages -->
+  <wsdl:message name="getInstancesRequest">
+    <wsdl:part element="tns:getInstances" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getInstancesResponse">
+    <wsdl:part element="tns:getInstancesResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getInstancesFault">
+    <wsdl:part element="tns:getInstancesFault" name="fault"/>
+  </wsdl:message>
+  
+  <!-- get passengers messages -->
+  <wsdl:message name="getPassengersRequest">
+    <wsdl:part element="tns:getPassengers" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getPassengersResponse">
+    <wsdl:part element="tns:getPassengersResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getPassengersFault">
+    <wsdl:part element="tns:getPassengersFault" name="fault"/>
+  </wsdl:message>
+  
+  <!-- get a single passenger messages -->
+  <wsdl:message name="getPassengerRequest">
+    <wsdl:part element="tns:getPassenger" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getPassengerResponse">
+    <wsdl:part element="tns:getPassengerResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getPassengerFault">
+    <wsdl:part element="tns:getPassengerFault" name="fault"/>
+  </wsdl:message>
+  
+  <!-- get a single flight messages -->
+  <wsdl:message name="getFlightRequest">
+    <wsdl:part element="tns:getFlight" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getFlightResponse">
+    <wsdl:part element="tns:getFlightResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getFlightFault">
+    <wsdl:part element="tns:getFlightFault" name="fault"/>
+  </wsdl:message>
+  
+  <!-- get a single instance messages -->
+  <wsdl:message name="getInstanceRequest">
+    <wsdl:part element="tns:getInstance" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getInstanceResponse">
+    <wsdl:part element="tns:getInstanceResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getInstanceFault">
+    <wsdl:part element="tns:getInstanceFault" name="fault"/>
+  </wsdl:message>
+  
+  <!-- get All messages -->
+  <wsdl:message name="getAllRequest">
+    <wsdl:part element="tns:getAll" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getAllResponse">
+    <wsdl:part element="tns:getAllResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getAllFault">
+    <wsdl:part element="tns:getAllFault" name="fault"/>
+  </wsdl:message>
+  
+  
+  <!-- Port Type declaration -->
+  <!-- ********************* -->
+  <wsdl:portType name="FDSInfo">
+    <wsdl:operation name="getAircrafts">
+      <wsdl:input message="tns:getAircraftsRequest"/>
+      <wsdl:output message="tns:getAircraftsResponse"/>
+      <wsdl:fault name="fault" message="tns:getAircraftsFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getFlights">
+      <wsdl:input message="tns:getFlightsRequest"/>
+      <wsdl:output message="tns:getFlightsResponse"/>
+      <wsdl:fault name="GetFlightsParamErr" message="tns:GetFlightsParamErr"/>
+      <wsdl:fault name="fault" message="tns:getFlightsFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getInstances">
+      <wsdl:input message="tns:getInstancesRequest"/>
+      <wsdl:output message="tns:getInstancesResponse"/>
+      <wsdl:fault name="fault" message="tns:getInstancesFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getPassengers">
+      <wsdl:input message="tns:getPassengersRequest"/>
+      <wsdl:output message="tns:getPassengersResponse"/>
+      <wsdl:fault name="fault" message="tns:getPassengersFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getPassenger">
+      <wsdl:input message="tns:getPassengerRequest"/>
+      <wsdl:output message="tns:getPassengerResponse"/>
+      <wsdl:fault name="fault" message="tns:getPassengerFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getFlight">
+      <wsdl:input message="tns:getFlightRequest"/>
+      <wsdl:output message="tns:getFlightResponse"/>
+      <wsdl:fault name="fault" message="tns:getFlightFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getInstance">
+      <wsdl:input message="tns:getInstanceRequest"/>
+      <wsdl:output message="tns:getInstanceResponse"/>
+      <wsdl:fault name="fault" message="tns:getInstanceFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="getAll">
+      <wsdl:input message="tns:getAllRequest"/>
+      <wsdl:output message="tns:getAllResponse"/>
+      <wsdl:fault name="fault" message="tns:getAllFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <!-- Binding declaration -->
+  <!-- ******************* -->
+  <wsdl:binding name="FDSInfoSOAP" type="tns:FDSInfo">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    
+    <!-- Get Aircrafts -->
+    <wsdl:operation name="getAircrafts">
+      <soap:operation soapAction="http://www.example.org/FDSInfo/getAircrafts"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+      	<soap:fault name="fault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    
+    <!-- Get Flights -->
+    <wsdl:operation name="getFlights">
+      <soap:operation soapAction="http://www.example.org/FDSInfo/getFlights"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GetFlightsParamErr">
+      	<soap:fault name="GetFlightsParamErr" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="fault">
+      	<soap:fault name="fault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    
+    <!-- Get Instances -->
+    <wsdl:operation name="getInstances">
+      <soap:operation soapAction="http://www.example.org/FDSInfo/getInstances"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+      	<soap:fault name="fault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    
+    <!-- Get Passengers -->
+    <wsdl:operation name="getPassengers">
+      <soap:operation soapAction="http://www.example.org/FDSInfo/getPassengers"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+      	<soap:fault name="fault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    
+    <!-- Get a single Passenger -->
+    <wsdl:operation name="getPassenger">
+      <soap:operation soapAction="http://www.example.org/FDSInfo/getPassenger"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+      	<soap:fault name="fault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+	
+	<!-- Get a single Flight -->
+	<wsdl:operation name="getFlight">
+      <soap:operation soapAction="http://www.example.org/FDSInfo/getFlight"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+      	<soap:fault name="fault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+	<!-- Get a single Instance -->
+	<wsdl:operation name="getInstance">
+      <soap:operation soapAction="http://www.example.org/FDSInfo/getI"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+      	<soap:fault name="fault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+	
+	<!-- Get All -->
+    <wsdl:operation name="getAll">
+      <soap:operation soapAction="http://www.example.org/FDSInfo/getAll"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="fault">
+      	<soap:fault name="fault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+  </wsdl:binding>
+  
+  <!-- Service declaration --> 
+  <!-- ******************* -->
+  <wsdl:service name="FDSInfoService">
+    <wsdl:port binding="tns:FDSInfoSOAP" name="FDSInfoSOAP">
+      <soap:address location="http://localhost:7071/fdsinfo"/>
+    </wsdl:port>
+  </wsdl:service>
+  
+</wsdl:definitions>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:boardList xmlns:ns2="http://pad.polito.it/boardList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" flight="HY903" date="2010-02-15+01:00" xsi:schemaLocation="./xsd/boardList.xsd">
+    <passenger seat="3D">Marco Chemin</passenger>
+    <passenger>Marta Bianchi</passenger>
+    <passenger seat="15D">Francesco Gonzales</passenger>
+    <passenger seat="6A">Mario Piccoli</passenger>
+    <passenger>Carlo Perissino</passenger>
+    <passenger seat="11A">Ludovico Turturro</passenger>
+    <passenger seat="10A">Monica Elkan</passenger>
+    <passenger seat="1B">Francesca Aziz</passenger>
+    <passenger>Elisabeth Diana</passenger>
+    <passenger seat="1A">Monica Bianchi</passenger>
+    <passenger>Claude Baldo</passenger>
+    <passenger seat="15A">Maurizio Baldo</passenger>
+    <passenger seat="5C">Claude Chemin</passenger>
+    <passenger>Eva Perissino</passenger>
+    <passenger seat="11B">Elisabeth Bianchi</passenger>
+    <passenger>Marco Piccoli</passenger>
+    <passenger>Anna Baldo</passenger>
+    <passenger>Carlo Di Crescenzo</passenger>
+    <passenger>Monica Baldo</passenger>
+    <passenger seat="4D">Caio Perissino</passenger>
+    <passenger seat="9B">Claudio Gonzales</passenger>
+    <passenger>Marco Bianchi</passenger>
+    <passenger seat="5A">Giuseppe Baldo</passenger>
+    <passenger seat="5B">Francesca Servini</passenger>
+    <passenger seat="8B">Sonia Gonzales</passenger>
+    <passenger seat="12B">Marta Chemin</passenger>
+    <passenger>Andrea Diana</passenger>
+    <passenger>Andrea Bianchi</passenger>
+    <passenger>Giuseppe Bianchi</passenger>
+    <passenger>Giuseppe Aziz</passenger>
+    <passenger>Pippo Piccoli</passenger>
+    <passenger seat="3A">Elisabeth Turturro</passenger>
+    <passenger seat="1D">Claude Diana</passenger>
+    <passenger seat="12A">Mario Servini</passenger>
+    <passenger>Mario Diana</passenger>
+    <passenger>Elisabeth Gonzales</passenger>
+    <passenger seat="3C">Mario Rossi</passenger>
+    <passenger seat="4C">Paolo Baldo</passenger>
+    <passenger seat="2D">Matteo Di Crescenzo</passenger>
+    <passenger seat="14D">Maurizio Del Santo</passenger>
+    <passenger seat="12C">Francesco Piccoli</passenger>
+    <passenger>Andrea Del Santo</passenger>
+    <passenger seat="6D">Francesco Chemin</passenger>
+    <passenger>Carlo Turturro</passenger>
+    <passenger>Paola Perissino</passenger>
+    <passenger>Carol Elkan</passenger>
+    <passenger seat="9A">Carol Servini</passenger>
+    <passenger seat="6C">Carol Perissino</passenger>
+    <passenger seat="13B">Carlo Piccoli</passenger>
+    <passenger seat="7C">Claudio Perissino</passenger>
+    <passenger>Clara Turturro</passenger>
+    <passenger seat="9D">Mauro Piccoli</passenger>
+</ns2:boardList>

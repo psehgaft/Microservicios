@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:tns="http://www.example.org/FDSControl/" 
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+name="FDSControl" 
+targetNamespace="http://www.example.org/FDSControl/">
+ <wsdl:documentation>
+ Author: Ivano Alvino s198651
+ Exam: DP2 Assignment 4a
+</wsdl:documentation>
+
+
+  <!-- Types declaration -->
+  <!-- ***************** --> 
+  
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.example.org/FDSControl/" 
+    			xmlns:tns1="http://www.example.org/FDSInfo_schema/">
+
+   		<xsd:import namespace="http://www.example.org/FDSInfo_schema/" schemaLocation="FDSInfo_schema.xsd" />
+   		
+   		<!-- Boarding -->
+   		<xsd:element name="BoardingInstance" type="tns:BoardingInstanceRequest"/>
+   		<xsd:complexType name="BoardingInstanceRequest">
+			<xsd:sequence>
+				<xsd:element name="flightNumber" type="tns1:flightNumberType" maxOccurs="1" minOccurs="1"/>
+				<xsd:element name="date" type="xsd:date" maxOccurs="1" minOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="BoardingInstanceResponse" type="tns:BoardinInstanceResponseType"/>
+		<xsd:complexType name="BoardinInstanceResponseType">
+			<xsd:sequence>
+				<xsd:element name="returnValue" type="xsd:boolean"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="BoardingInstanceFault">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="BoardingInstanceFault" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		</xsd:element>
+		<xsd:element name="InstanceNotFoundError" type="tns:InstanceNotFoundError"/>
+		<xsd:complexType name="InstanceNotFoundError">
+			<xsd:sequence>
+				<xsd:element name="message" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="ServiceUnavableError" type="tns:ServiceUnavabileErrorType"/>
+		<xsd:complexType name="ServiceUnavabileErrorType">
+			<xsd:sequence>
+				<xsd:element name="message" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="InstanceYetBoardedError" type="tns:InstanceYetBoardedErrorType"/>
+		<xsd:complexType name="InstanceYetBoardedErrorType">
+			<xsd:sequence>
+				<xsd:element name="message" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		
+		<!-- Register Operation -->
+		<xsd:element name="RegisterPassengerRequest" type="tns:RegisterPassengerRequestType"/>
+		<xsd:complexType name="RegisterPassengerRequestType">
+			<xsd:sequence>
+				<xsd:element name="passenger" type="xsd:string"/>
+				<xsd:element name="date" type="xsd:date"/>
+				<xsd:element name="flightNumber" type="tns1:flightNumberType"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="RegisterPassengerResponse" type="tns:RegisterPassengerResponseType"/>
+		<xsd:complexType name="RegisterPassengerResponseType">
+			<xsd:sequence>
+				<xsd:element name="returnValue" type="xsd:boolean"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="RegisterInstanceNotFoundError" type="tns:RegisterInstanceNotFoundErrorType"/>
+		<xsd:complexType name="RegisterInstanceNotFoundErrorType">
+			<xsd:sequence>
+				<xsd:element name="message" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="RegisterPassengerNotFound" type="tns:RegisterPassengerNotFoundType"/>
+		<xsd:complexType name="RegisterPassengerNotFoundType">
+			<xsd:sequence>
+				<xsd:element name="message" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="RegisterPassengerFault">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="RegisterPassengerFault" type="xsd:string">
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:element>
+		
+		<!-- Get Passengers -->
+		<xsd:element name="getPassengers" type="tns:getPassengersRequestType"/>
+		<xsd:complexType name="getPassengersRequestType">
+			<xsd:sequence>
+				<xsd:element name="date" type="xsd:date"/>
+				<xsd:element name="flightNumber" type="tns1:flightNumberType"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="getPassengersResponse" type="tns:getPassengersResponseType"/>
+		<xsd:complexType name="getPassengersResponseType">
+			<xsd:sequence>
+				<xsd:element name="Passengers" type="tns1:passengerReaderType" maxOccurs="unbounded" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		
+		<!-- Cancel Instance -->
+		<xsd:element name="cancelInstance" type="tns:cancelInstanceType"/>
+		<xsd:complexType name="cancelInstanceType">
+			<xsd:sequence>
+				<xsd:element name="flightNumber" type="tns1:flightNumberType" maxOccurs="1" minOccurs="1"/>
+				<xsd:element name="Aircraft" type="tns1:modelType" maxOccurs="1" minOccurs="1"/>
+				<xsd:element name="date" type="xsd:dateTime" maxOccurs="1" minOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="cancelInstanceResponse" type="tns:cancelInstanceResponseType"/>
+		<xsd:complexType name="cancelInstanceResponseType">
+			<xsd:sequence>
+				<xsd:element name="returnValue" type="xsd:boolean"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="InstanceNotBookedFaultType" type="tns:InstanceNotBookedErrorType"/>
+		<xsd:complexType name="InstanceNotBookedErrorType">
+			<xsd:sequence>
+				<xsd:element name="message" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		
+		<!-- Change Delay -->
+		<xsd:element name="ChangeDelay" type="tns:ChangeDelayRequestType"/>
+		<xsd:complexType name="ChangeDelayRequestType">
+			<xsd:sequence>
+				<xsd:element name="flightNumber" type="tns1:flightNumberType"/>
+				<xsd:element name="Aircraft" type="tns1:modelType"/>
+				<xsd:element name="Date" type="xsd:dateTime"/>
+				<xsd:element name="Delay" type="tns1:delayType"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="ChangeDelayResponse" type="tns:ChangeDelayResponseType"/>
+		<xsd:complexType name="ChangeDelayResponseType">
+			<xsd:sequence>
+				<xsd:element name="returnValue" type="xsd:boolean"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		
+		<!-- Change Gate -->
+		<xsd:element name="ChangeGate" type="tns:ChangeGateRequestType"/>
+		<xsd:complexType name="ChangeGateRequestType">
+			<xsd:sequence>
+				<xsd:element name="flightNumber" type="tns1:flightNumberType"/>
+				<xsd:element name="Aircraft" type="tns1:modelType"/>
+				<xsd:element name="date" type="xsd:dateTime"/>
+				<xsd:element name="gate" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="ChangeGateResponse">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="returnValue" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:element>
+		
+		<!-- Check-in Operations -->
+		<xsd:element name="CheckInOperation" type="tns:CheckInOperationRequestType"/>
+		<xsd:complexType name="CheckInOperationRequestType">
+			<xsd:sequence>
+				<xsd:element name="flightNumber" type="tns1:flightNumberType"/>
+				<xsd:element name="Aircraft" type="tns1:modelType"/>
+				<xsd:element name="date" type="xsd:dateTime"/>
+				<xsd:element name="passenger" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="CheckInOperationResponse" type="tns:CheckinOperationResponseType"/>
+		<xsd:complexType name="CheckinOperationResponseType">
+			<xsd:sequence>
+				<xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1"/>
+				<xsd:element name="seat" type="tns1:seatType" maxOccurs="1" minOccurs="1"/>
+				<xsd:element name="gate" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+				<xsd:element name="delay" type="tns1:delayType" maxOccurs="1" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<xsd:element name="PassengerAlreadyCheckinError" type="tns:PassengerAlreadyCheckinErrorType"/>
+		<xsd:complexType name="PassengerAlreadyCheckinErrorType">
+			<xsd:sequence>
+				<xsd:element name="message" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+  </xsd:schema>
+    
+  </wsdl:types>
+  
+  <!-- Messages declaration -->
+  <!-- ******************** -->
+
+  <!-- Boarding  Messages -->  
+  <wsdl:message name="BoardingInstanceRequest">
+    <wsdl:part element="tns:BoardingInstance" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="BoardingInstanceResponse">
+    <wsdl:part element="tns:BoardingInstanceResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="InstanceNotFoundMessage">
+  	<wsdl:part name="error" element="tns:InstanceNotFoundError"/>
+  </wsdl:message>
+  <wsdl:message name="ServiceUnavaibleMessage">
+  	<wsdl:part name="error" element="tns:ServiceUnavableError"/>
+  </wsdl:message>
+  <wsdl:message name="InstanceYetBoardedError">
+  	<wsdl:part name="error" element="tns:InstanceYetBoardedError"/>
+  </wsdl:message>
+  
+  <!-- Register Passenger -->
+  <wsdl:message name="RegisterPassengerRequest">
+  	<wsdl:part name="parameters" element="tns:RegisterPassengerRequest"/>
+  </wsdl:message>
+  <wsdl:message name="RegisterPassengerResponse">
+  	<wsdl:part name="parameters" element="tns:RegisterPassengerResponse"/>
+  </wsdl:message>
+  <wsdl:message name="RegiterInstanceNotFoundError">
+  	<wsdl:part name="error" element="tns:RegisterInstanceNotFoundError"/>
+  </wsdl:message>
+  <wsdl:message name="RegisterPassengerNotFoundErrorMessage">
+  	<wsdl:part name="error" element="tns:RegisterPassengerNotFound"/>
+  </wsdl:message>
+  <wsdl:message name="RegisterPassengerFault">
+  	<wsdl:part name="parameters" element="tns:RegisterPassengerFault"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InstanceNotBookedFault">
+  	<wsdl:part name="errors" element="tns:InstanceNotBookedFaultType"/>
+  </wsdl:message>
+ 
+ <!-- Get Passengers -->
+  <wsdl:message name="getPassengersRequest">
+  	<wsdl:part name="parameters" element="tns:getPassengers"/>
+  </wsdl:message>
+  <wsdl:message name="getPassengersResponse">
+  	<wsdl:part name="parameters" element="tns:getPassengersResponse"/>
+  </wsdl:message>
+
+  <!-- Cancel Instance -->
+  <wsdl:message name="cancelInstanceRequest">
+  	<wsdl:part name="parameters" element="tns:cancelInstance"/>
+  </wsdl:message>
+  <wsdl:message name="cancelInstanceResponse">
+  	<wsdl:part name="parameters" element="tns:cancelInstanceResponse"/>
+  </wsdl:message>
+
+  <!-- Change Delay -->
+  <wsdl:message name="ChangeDelayRequest">
+  	<wsdl:part name="parameters" element="tns:ChangeDelay"/>
+  </wsdl:message>
+  <wsdl:message name="ChangeDelayResponse">
+  	<wsdl:part name="parameters" element="tns:ChangeDelayResponse"/>
+  </wsdl:message>
+  
+  <!-- Change Gate -->	
+  <wsdl:message name="ChangeGateRequest">
+  	<wsdl:part name="parameters" element="tns:ChangeGate"/>
+  </wsdl:message>
+  <wsdl:message name="ChangeGateResponse">
+  	<wsdl:part name="parameters" element="tns:ChangeGateResponse"/>
+  </wsdl:message>
+  
+  <!-- Check-in Operation Request -->
+  <wsdl:message name="CheckInOperationRequest">
+  	<wsdl:part name="parameters" element="tns:CheckInOperation"/>
+  </wsdl:message>
+  <wsdl:message name="CheckInOperationResponse">
+  	<wsdl:part name="parameters" element="tns:CheckInOperationResponse"/>
+  </wsdl:message>
+  <wsdl:message name="PassengerAlreadyCheckinFault">
+  	<wsdl:part name="error" element="tns:PassengerAlreadyCheckinError"/>
+  </wsdl:message>
+
+  
+  
+  
+  
+  <!-- Ports Type declaration -->
+  <!-- ********************** -->
+  
+  <wsdl:portType name="FDSControl">
+    <wsdl:operation name="BoardingInstance">
+      <wsdl:input message="tns:BoardingInstanceRequest"/>
+      <wsdl:output message="tns:BoardingInstanceResponse"/>
+      <wsdl:fault name="InstanceNotFoundError" message="tns:InstanceNotFoundMessage"></wsdl:fault>
+      <wsdl:fault name="ServiceUnavaible" message="tns:ServiceUnavaibleMessage"></wsdl:fault>
+      <wsdl:fault name="InstanceYetBoarded" message="tns:InstanceYetBoardedError"></wsdl:fault>
+    </wsdl:operation>
+        
+    <wsdl:operation name="RegisterPassenger">
+    	<wsdl:input message="tns:RegisterPassengerRequest"></wsdl:input>
+    	<wsdl:output message="tns:RegisterPassengerResponse"></wsdl:output>
+        <wsdl:fault name="RegisterInstanceNotFoundError" message="tns:RegiterInstanceNotFoundError"></wsdl:fault>
+        <wsdl:fault name="RegisterPassengerNotFound" message="tns:RegisterPassengerNotFoundErrorMessage"></wsdl:fault>
+        <wsdl:fault name="ServiceUnavaible" message="tns:ServiceUnavaibleMessage"></wsdl:fault>
+        <wsdl:fault name="InstanceNotBooked" message="tns:InstanceNotBookedFault"></wsdl:fault>
+    </wsdl:operation>
+        
+    <wsdl:operation name="getPassengers">
+    	<wsdl:input message="tns:getPassengersRequest"></wsdl:input>
+    	<wsdl:output message="tns:getPassengersResponse"></wsdl:output>
+        <wsdl:fault name="InstanceNotFound" message="tns:InstanceNotFoundMessage"></wsdl:fault>
+        <wsdl:fault name="ServiceUnavaible" message="tns:ServiceUnavaibleMessage"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <wsdl:portType name="OtherOperationPort">
+  	<wsdl:operation name="cancelInstance">
+  		<wsdl:input message="tns:cancelInstanceRequest"></wsdl:input>
+  		<wsdl:output message="tns:cancelInstanceResponse"></wsdl:output>
+        <wsdl:fault name="InstanceNotFound" message="tns:InstanceNotFoundMessage"></wsdl:fault>
+        <wsdl:fault name="ServiceUnavaible" message="tns:ServiceUnavaibleMessage"></wsdl:fault>
+        </wsdl:operation>
+        
+  	<wsdl:operation name="ChangeDelay">
+  		<wsdl:input message="tns:ChangeDelayRequest"></wsdl:input>
+  		<wsdl:output message="tns:ChangeDelayResponse"></wsdl:output>
+        <wsdl:fault name="InstanceNotFoundError" message="tns:InstanceNotFoundMessage"></wsdl:fault>
+        <wsdl:fault name="ServiceUnavaibleError" message="tns:ServiceUnavaibleMessage"></wsdl:fault>
+    </wsdl:operation>
+    
+  	<wsdl:operation name="ChangeGate">
+  		<wsdl:input message="tns:ChangeGateRequest"></wsdl:input>
+  		<wsdl:output message="tns:ChangeGateResponse"></wsdl:output>
+        <wsdl:fault name="InstanceNotFoundError" message="tns:InstanceNotFoundMessage"></wsdl:fault>
+        <wsdl:fault name="ServiceUnavaibleError" message="tns:ServiceUnavaibleMessage"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <wsdl:portType name="CheckinOperationPort">
+  	<wsdl:operation name="CheckInOperation">
+  		<wsdl:input message="tns:CheckInOperationRequest"></wsdl:input>
+  		<wsdl:output message="tns:CheckInOperationResponse"></wsdl:output>
+        <wsdl:fault name="PassengerAlreadyCheckin" message="tns:PassengerAlreadyCheckinFault"></wsdl:fault>
+        <wsdl:fault name="ServiceUnavaible" message="tns:ServiceUnavaibleMessage"></wsdl:fault>
+        <wsdl:fault name="InstanceNotFound" message="tns:InstanceNotFoundMessage"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <!-- Binding declaration -->
+  <!-- ******************* -->
+  
+  <wsdl:binding name="FDSControlBinding" type="tns:FDSControl">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    
+    <wsdl:operation name="BoardingInstance">
+  		<soap:operation soapAction="http://www.example.org/FDSControl/BoardingInstance" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  		<wsdl:fault name="InstanceNotFoundError">
+  			<soap:fault use="literal" name="InstanceNotFoundError" />
+  		</wsdl:fault>
+  		<wsdl:fault name="ServiceUnavaible">
+  			<soap:fault use="literal" name="ServiceUnavaible" />
+  		</wsdl:fault>
+  		<wsdl:fault name="InstanceYetBoarded">
+  			<soap:fault use="literal" name="InstanceYetBoarded" />
+  		</wsdl:fault>
+  	</wsdl:operation>
+
+    <wsdl:operation name="RegisterPassenger">
+  		<soap:operation soapAction="http://www.example.org/FDSControl/RegisterPassenger" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  		<wsdl:fault name="RegisterInstanceNotFoundError">
+  			<soap:fault use="literal" name="RegisterInstanceNotFoundError" />
+  		</wsdl:fault>
+  		<wsdl:fault name="RegisterPassengerNotFound">
+  			<soap:fault use="literal" name="RegisterPassengerNotFound" />
+  		</wsdl:fault>
+  		<wsdl:fault name="ServiceUnavaible">
+  			<soap:fault use="literal" name="ServiceUnavaible" />
+  		</wsdl:fault>
+  		<wsdl:fault name="InstanceNotBooked">
+  			<soap:fault use="literal" name="InstanceNotBooked" />
+  		</wsdl:fault>
+  	</wsdl:operation>
+  	
+  	<wsdl:operation name="getPassengers">
+  		<soap:operation soapAction="http://www.example.org/FDSControl/getPassengers" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  		<wsdl:fault name="InstanceNotFound">
+  			<soap:fault use="literal" name="InstanceNotFound" />
+  		</wsdl:fault>
+  		<wsdl:fault name="ServiceUnavaible">
+  			<soap:fault use="literal" name="ServiceUnavaible" />
+  		</wsdl:fault>
+  	</wsdl:operation>
+  	
+  </wsdl:binding>
+  
+  <wsdl:binding name="OtherOperationBinding" type="tns:OtherOperationPort">
+  	<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+  	
+  	<wsdl:operation name="cancelInstance">
+  		<soap:operation soapAction="http://www.example.org/FDSControl/cancelInstance" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  		<wsdl:fault name="InstanceNotFound">
+  			<soap:fault use="literal" name="InstanceNotFound" />
+  		</wsdl:fault>
+  		<wsdl:fault name="ServiceUnavaible">
+  			<soap:fault use="literal" name="ServiceUnavaible" />
+  		</wsdl:fault>
+  	</wsdl:operation>
+  	
+  	<wsdl:operation name="ChangeDelay">
+  		<soap:operation soapAction="http://www.example.org/FDSControl/ChangeDelay" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  		<wsdl:fault name="InstanceNotFoundError">
+  			<soap:fault use="literal" name="InstanceNotFoundError" />
+  		</wsdl:fault>
+  		<wsdl:fault name="ServiceUnavaibleError">
+  			<soap:fault use="literal" name="ServiceUnavaibleError" />
+  		</wsdl:fault>
+  	</wsdl:operation>
+  	
+  	<wsdl:operation name="ChangeGate">
+  		<soap:operation soapAction="http://www.example.org/FDSControl/ChangeGate" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  		<wsdl:fault name="InstanceNotFoundError">
+  			<soap:fault use="literal" name="InstanceNotFoundError" />
+  		</wsdl:fault>
+  		<wsdl:fault name="ServiceUnavaibleError">
+  			<soap:fault use="literal" name="ServiceUnavaibleError" />
+  		</wsdl:fault>
+  	</wsdl:operation>
+  </wsdl:binding>
+  
+  <wsdl:binding name="ChekinOperationBinding" type="tns:CheckinOperationPort">
+  	<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+  	
+  	<wsdl:operation name="CheckInOperation">
+  		<soap:operation soapAction="http://www.example.org/FDSControl/CheckInOperation" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  		<wsdl:fault name="InstanceNotFound">
+  			<soap:fault use="literal" name="InstanceNotFound" />
+  		</wsdl:fault>
+  		<wsdl:fault name="ServiceUnavaible">
+  			<soap:fault use="literal" name="ServiceUnavaible" />
+  		</wsdl:fault>
+  		<wsdl:fault name="PassengerAlreadyCheckin">
+  			<soap:fault use="literal" name="PassengerAlreadyCheckin" />
+  		</wsdl:fault>
+  	</wsdl:operation>
+  </wsdl:binding>
+  
+  <!-- Service declaration -->
+  <!-- ******************* -->
+  
+  <wsdl:service name="FDSControlService">
+    <wsdl:port binding="tns:FDSControlBinding" name="FDSControlSOAP">
+      <soap:address location="http://localhost:7070/fdscontrol"/>
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="OtherOperationService">
+  	<wsdl:port binding="tns:OtherOperationBinding" name="OtherOperationSOAP">
+  		<soap:address location="http://localhost:8385/OtherOperation" />
+  	</wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="CheckInOperationService">
+  	<wsdl:port binding="tns:ChekinOperationBinding" name="CheckinOperationSOAP">
+  		<soap:address location="http://localhost/CheckinOperation" />
+  	</wsdl:port>
+  </wsdl:service>
+  
+</wsdl:definitions>
